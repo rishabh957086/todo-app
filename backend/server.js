@@ -15,12 +15,12 @@ connectDB();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// ✅ FIXED CORS (IMPORTANT)
+// ✅ CORS FIX (SAFE + PRODUCTION READY)
 app.use(
   cors({
     origin: [
       'http://localhost:5173',
-      process.env.FRONTEND_URL,
+      'https://todo-app-2-gtvs.onrender.com', // 👈 YOUR FRONTEND
     ],
     credentials: true,
   })
@@ -31,9 +31,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// ✅ ROOT ROUTE (NO MORE "Cannot GET /")
+// ✅ ROOT ROUTE (FIXED)
 app.get('/', (req, res) => {
-  res.send('API is running 🚀');
+  res.status(200).send('API is running 🚀');
 });
 
 // Routes
