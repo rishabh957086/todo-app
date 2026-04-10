@@ -1,11 +1,13 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+// ✅ PRODUCTION + LOCAL SUPPORT
+const API_URL =
+  import.meta.env.VITE_API_URL ||
+  'https://todo-app-1-ruib.onrender.com/api'; // 👈 your backend URL
 
 // Create axios instance
 const api = axios.create({
   baseURL: API_URL,
-  withCredentials: true, // For HTTP-only cookies
   headers: {
     'Content-Type': 'application/json',
   },
@@ -20,9 +22,7 @@ api.interceptors.request.use(
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
 // Response interceptor - handle errors
@@ -30,7 +30,6 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      // Token expired or invalid
       localStorage.removeItem('token');
       window.location.href = '/login';
     }
@@ -38,7 +37,7 @@ api.interceptors.response.use(
   }
 );
 
-// Auth API methods
+// 🔐 Auth API
 export const authAPI = {
   register: (data) => api.post('/auth/register', data),
   login: (data) => api.post('/auth/login', data),
@@ -46,7 +45,7 @@ export const authAPI = {
   getMe: () => api.get('/auth/me'),
 };
 
-// Task API methods
+// 📝 Task API
 export const taskAPI = {
   getAll: (params) => api.get('/tasks', { params }),
   create: (data) => api.post('/tasks', data),
